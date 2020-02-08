@@ -21,6 +21,7 @@ public class Config {
     public IntakeConstants intakeConstants; 
     public LiftConstants liftConstants; 
     public ShooterConstants shooterConstants;
+    public LimeLightConstants limeLightConstants;
 
     public Config() {
         runConstants = new RunConstants();
@@ -31,6 +32,7 @@ public class Config {
         intakeConstants = new IntakeConstants(); 
         liftConstants = new LiftConstants(); 
         shooterConstants = new ShooterConstants();
+        limeLightConstants = new LimeLightConstants();
     }
 
     //Constants for the intake test mechanism
@@ -62,6 +64,7 @@ public class Config {
     }
 
     public class ShooterConstants {
+        
         public int 
             BELT_PORT = 55, //TODO Insert correct belt port,
             LEFT_SHOOTER_PORT = 50, //TODO Insert correct port
@@ -79,7 +82,8 @@ public class Config {
             P = 1,
             I = .001,
             D = 0,
-            iZone = 500;
+            iZone = 500,
+            MAX_SERVO_SPEED = 0.9;
         public SparkMaxWithEncoderConfig MOTOR_CONFIG = new SparkMaxWithEncoderConfig(new SparkMaxConfig(LEFT_SHOOTER_PORT, SHOOTER_INVERTED), 
                                                                                       new BaseEncoderConfig(0, false), 
                                                                                       new PIDConfig(P, I, D, iZone));
@@ -148,5 +152,9 @@ public class Config {
 			ANGULAR_SPEED_MULT = 1.0,
 			NUDGE_MOVE_SPEED = 0.2,
 			NUDGE_TURN_SPEED = 0.2;
+    }
+
+    public class LimeLightConstants {
+        // TBD
     }
 }

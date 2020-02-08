@@ -41,6 +41,7 @@ import robotcode.driving.Wheel;
 import robotcode.systems.CompressorWrapper;
 import sensors.RobotAngle;
 import sensors.TalonAbsoluteEncoder;
+import edu.wpi.first.wpilibj.controller.PIDController;
 
 public class Robot extends TimedRobot {
 
@@ -89,6 +90,7 @@ public class Robot extends TimedRobot {
 	private double shooterRPM;
 	private Servo panServo;
 	private Servo hoodServo;
+	private PIDController servoPID;
 	private com.ctre.phoenix.motorcontrol.can.TalonSRX sideRoller;
 	NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 
@@ -159,6 +161,8 @@ public class Robot extends TimedRobot {
 			hoodServo = new Servo(mConfig.shooterConstants.HOOD_SERVO_PORT);
 			panServo.setBounds(2.5 * mConfig.shooterConstants.MAX_SERVO_SPEED, 1.6, 1.5, 1.4, 0.5 * mConfig.shooterConstants.MAX_SERVO_SPEED);
 			hoodServo.setBounds(2.5 * mConfig.shooterConstants.MAX_SERVO_SPEED, 1.6, 1.5, 1.4, 0.5 * mConfig.shooterConstants.MAX_SERVO_SPEED);
+
+			servoPID = new PIDController(mConfig.shooterConstants.SERVO_P, mConfig.shooterConstants.SERVO_I, mConfig.shooterConstants.SERVO_D);
 		}
 
 		if (mConfig.runConstants.RUNNING_CAMERA) {
@@ -348,17 +352,12 @@ public class Robot extends TimedRobot {
 	}
 
 	private void runAim() {
-		class Limelight { public double get(String x) { return NetworkTableInstance.getDefault().getTable("limelight").getEntry(x).getDouble(0); } }
 
 		Limelight l = new Limelight();
 
 		if (l.get("tx") == 1) {
 			double targetX = l.get("tx");
 			double targetY = l.get("ty");
-			
-
-
-			panServo.set;
 		}
 
 	}

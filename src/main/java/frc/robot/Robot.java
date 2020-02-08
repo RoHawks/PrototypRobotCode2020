@@ -239,6 +239,10 @@ public class Robot extends TimedRobot {
 			runShooter();
 		}
 
+		if (mConfig.runConstants.RUNNING_CAMERA && mConfig.runConstants.SECONDARY_JOYSTICK) {
+			runAim();
+		}
+
 		// put info on SmartDashboard
 		if (mConfig.runConstants.RUNNING_DRIVE) {
 			for (int i = 0; i < 4; i++) {
@@ -356,16 +360,15 @@ public class Robot extends TimedRobot {
 	}
 
 	private void runAim() {
+		if (mController.getRawButtonPressed(mConfig.shooterConstants.AIM_BUTTON)) {
+			if (limelight.get("tv") == 1) {
+				double xTarget = limelight.get("tx");
+				double yTarget = limelight.get("ty");
 
-		if (limelight.get("tv") == 1) {
-			double xTarget = limelight.get("tx");
-			double yTarget = limelight.get("ty");
-
-			panServo.set(servoPID.calculate(xTarget));
-			hoodServo.set(servoPID.calculate(yTarget));
+				panServo.set(servoPID.calculate(xTarget));
+				hoodServo.set(servoPID.calculate(yTarget));
+			}
 		}
-
-
 	}
 
 	public void startGame() {

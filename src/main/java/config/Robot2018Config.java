@@ -9,7 +9,7 @@ import drivetrain.swerve.wheels.configs.WheelConfig;
 public class Robot2018Config extends Config {
     public final boolean[] 
         TURN_INVERTED = new boolean[] { true, true, true, true },
-        DRIVE_INVERTED = new boolean[] { false, false, false, false },
+        DRIVE_INVERTED = new boolean[] { false, true, true, false },
         ENCODER_REVERSED = new boolean[] { true, true, true, true };
     public final double[] 
         X_OFF = new double[] { -29.25/2.0, 29.25/2.0 , 29.25/2.0 , -29.25/2.0 }, 

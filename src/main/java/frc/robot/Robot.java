@@ -357,10 +357,14 @@ public class Robot extends TimedRobot {
 
 	private void runAim() {
 
-		if (limelight.get("tx") == 1) {
-			double targetX = limelight.get("tx");
-			double targetY = limelight.get("ty");
+		if (limelight.get("tv") == 1) {
+			double xTarget = limelight.get("tx");
+			double yTarget = limelight.get("ty");
+
+			panServo.set(servoPID.calculate(xTarget));
+			hoodServo.set(servoPID.calculate(yTarget));
 		}
+
 
 	}
 

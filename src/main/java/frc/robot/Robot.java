@@ -311,6 +311,7 @@ public class Robot extends TimedRobot {
 				beltMotor.set(ControlMode.PercentOutput, 0);
 				sideRoller.set(ControlMode.PercentOutput, 0);
 				leftShooterMotor.set(.2);
+				break;
 			default:
 				intakeMotor.set(ControlMode.PercentOutput, 0);
 				beltMotor.set(ControlMode.PercentOutput, 0);

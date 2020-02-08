@@ -83,7 +83,10 @@ public class Config {
             I = .001,
             D = 0,
             iZone = 500,
-            MAX_SERVO_SPEED = 0.9;
+            MAX_SERVO_SPEED = 0.9,
+            SERVO_P = 1,
+            SERVO_I = 0.01,
+            SERVO_D = 0;
         public SparkMaxWithEncoderConfig MOTOR_CONFIG = new SparkMaxWithEncoderConfig(new SparkMaxConfig(LEFT_SHOOTER_PORT, SHOOTER_INVERTED), 
                                                                                       new BaseEncoderConfig(0, false), 
                                                                                       new PIDConfig(P, I, D, iZone));

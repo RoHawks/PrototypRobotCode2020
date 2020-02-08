@@ -74,7 +74,8 @@ public class Config {
             SPEED_UP_BUTTON = 4, //Y button
             SPEED_DOWN_BUTTON = 1, //A button
             DRIVE_BUTTON = 6, //Right shoulder button
-            REVERSE_BUTTON = 5; //Left shoulder button
+            REVERSE_BUTTON = 5, //Left shoulder button
+            AIM_BUTTON = 4; // Y button
         public boolean SHOOTER_INVERTED = true;
         public double 
             SHOOTER_RPM = 0,
@@ -84,12 +85,13 @@ public class Config {
             D = 0,
             iZone = 500,
             MAX_SERVO_SPEED = 0.9,
-            SERVO_P = 1,
+            SERVO_P = -1,
             SERVO_I = 0.01,
             SERVO_D = 0;
         public SparkMaxWithEncoderConfig MOTOR_CONFIG = new SparkMaxWithEncoderConfig(new SparkMaxConfig(LEFT_SHOOTER_PORT, SHOOTER_INVERTED), 
                                                                                       new BaseEncoderConfig(0, false), 
                                                                                       new PIDConfig(P, I, D, iZone));
+                                                                                    
     }
 
     // Constatnts from RunConstants

@@ -126,6 +126,7 @@ public class Robot extends TimedRobot {
 		if (mConfig.runConstants.RUNNING_INTAKE) {
 			// intakeMotor = new TalonSRX(new TalonSRXConfig(mConfig.intakeConstants.INTAKE_PORT, mConfig.intakeConstants.INTAKE_INVERTED));
 			intakeMotor = new com.ctre.phoenix.motorcontrol.can.TalonSRX(34);
+			intakeMotor.setInverted(true);
 		}
 
 		if (mConfig.runConstants.SECONDARY_JOYSTICK) {
@@ -277,7 +278,7 @@ public class Robot extends TimedRobot {
 		}
 		switch(state) {
 			case "INTAKING":
-				intakeMotor.set(ControlMode.PercentOutput, 1);
+				intakeMotor.set(ControlMode.PercentOutput, .8);
 				beltMotor.set(ControlMode.PercentOutput, 0);
 				sideRoller.set(ControlMode.PercentOutput, 0);
 				leftShooterMotor.set(0);

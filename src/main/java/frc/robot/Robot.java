@@ -319,10 +319,6 @@ public class Robot extends TimedRobot {
 				leftShooterMotor.set(0);
 				break;
 		}
-		double panPower = mJoystick.getX(Hand.kRight) * 0.9;
-		double hoodPower = mJoystick.getY(Hand.kRight) * 0.9;
-		panServo.set(panPower);
-		hoodServo.set(hoodPower);
 
 		// SmartDashboard.putNumber("Shooter RPM", leftShooterMotor.get());
 		// SmartDashboard.putNumber("Shooter RPM Target", shooterRPM);

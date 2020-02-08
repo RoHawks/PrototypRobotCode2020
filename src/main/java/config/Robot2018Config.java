@@ -29,6 +29,7 @@ public class Robot2018Config extends Config {
         runConstants.RUNNING_SHOOTER = true;
         runConstants.SECONDARY_JOYSTICK = true;
         runConstants.RUNNING_INTAKE = true;
+        runConstants.RUNNING_CAMERA = true;
         for(int i = 0; i < wheelConfigs.length; i++) {
             wheelConfigs[i] = new WheelConfig(
                                 new TalonSRXConfig(DRIVE[i], DRIVE_INVERTED[i]),

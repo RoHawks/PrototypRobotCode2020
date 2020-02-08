@@ -132,6 +132,7 @@ public class Robot extends TimedRobot {
 		if (mConfig.runConstants.RUNNING_INTAKE) {
 			// intakeMotor = new TalonSRX(new TalonSRXConfig(mConfig.intakeConstants.INTAKE_PORT, mConfig.intakeConstants.INTAKE_INVERTED));
 			intakeMotor = new com.ctre.phoenix.motorcontrol.can.TalonSRX(34);
+			intakeMotor.setInverted(true);
 		}
 
 		if (mConfig.runConstants.SECONDARY_JOYSTICK) {
@@ -290,30 +291,30 @@ public class Robot extends TimedRobot {
 		if (mJoystick.getYButton()) {
 			state = "IDLE";
 		}
-		switch (state) {
-		case "INTAKING":
-			intakeMotor.set(ControlMode.PercentOutput, 1);
-			beltMotor.set(ControlMode.PercentOutput, 0);
-			sideRoller.set(ControlMode.PercentOutput, 0);
-			leftShooterMotor.set(0);
-			break;
-		case "SHOOTING":
-			intakeMotor.set(ControlMode.PercentOutput, 0);
-			beltMotor.set(ControlMode.PercentOutput, -.5);
-			sideRoller.set(ControlMode.PercentOutput, .2);
-			leftShooterMotor.set(.2);
-			break;
-		case "HOLDING":
-			intakeMotor.set(ControlMode.PercentOutput, 0);
-			beltMotor.set(ControlMode.PercentOutput, 0);
-			sideRoller.set(ControlMode.PercentOutput, 0);
-			leftShooterMotor.set(.2);
-		default:
-			intakeMotor.set(ControlMode.PercentOutput, 0);
-			beltMotor.set(ControlMode.PercentOutput, 0);
-			sideRoller.set(ControlMode.PercentOutput, 0);
-			leftShooterMotor.set(0);
-			break;
+		switch(state) {
+			case "INTAKING":
+				intakeMotor.set(ControlMode.PercentOutput, .8);
+				beltMotor.set(ControlMode.PercentOutput, 0);
+				sideRoller.set(ControlMode.PercentOutput, 0);
+				leftShooterMotor.set(0);
+				break;
+			case "SHOOTING":
+				intakeMotor.set(ControlMode.PercentOutput, 0);
+				beltMotor.set(ControlMode.PercentOutput, -.5);
+				sideRoller.set(ControlMode.PercentOutput, .2);
+				leftShooterMotor.set(.2);
+				break;
+			case "HOLDING":
+				intakeMotor.set(ControlMode.PercentOutput, 0);
+				beltMotor.set(ControlMode.PercentOutput, 0);
+				sideRoller.set(ControlMode.PercentOutput, 0);
+				leftShooterMotor.set(.2);
+			default:
+				intakeMotor.set(ControlMode.PercentOutput, 0);
+				beltMotor.set(ControlMode.PercentOutput, 0);
+				sideRoller.set(ControlMode.PercentOutput, 0);
+				leftShooterMotor.set(0);
+				break;
 		}
 		double panPower = mJoystick.getX(Hand.kRight) * 0.9;
 		double hoodPower = mJoystick.getY(Hand.kRight) * 0.9;

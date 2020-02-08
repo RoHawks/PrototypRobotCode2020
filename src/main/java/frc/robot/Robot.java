@@ -23,9 +23,11 @@ import config.Robot2018Config;
 import config.Robot2019Config;
 import config.ShooterTestConfig;
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Servo;
@@ -71,7 +73,6 @@ public class Robot extends TimedRobot {
 
 	// game setup
 	private boolean mInGame = false;
-
 	private long mGameStartMillis;
 
 	//a test intake
@@ -86,9 +87,10 @@ public class Robot extends TimedRobot {
 	private CANSparkMax rightShooterMotor;
 	private com.ctre.phoenix.motorcontrol.can.TalonSRX beltMotor;
 	private double shooterRPM;
-	//private Servo panServo;
-	//private Servo hoodServo;
+	private Servo panServo;
+	private Servo hoodServo;
 	private com.ctre.phoenix.motorcontrol.can.TalonSRX sideRoller;
+	NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 
 	// ****************//
 	// GENERAL CODE //
@@ -99,7 +101,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void testInit() {
 		SmartDashboard.putBoolean("BackLeft inverted", mWheel[1].Turn.getInverted());
-		SmartDashboard.putBoolean("BackLeft encoder reversed", ((Robot2018Config)mConfig).ENCODER_REVERSED[1]);
+		SmartDashboard.putBoolean("BackLeft encoder reversed", ((Robot2018Config) mConfig).ENCODER_REVERSED[1]);
 	}
 
 	@Override
@@ -115,7 +117,7 @@ public class Robot extends TimedRobot {
 		//mConfig = new ShooterTestConfig();
 		mController = new XboxController(mConfig.ports.XBOX);
 		if (mConfig.runConstants.RUNNING_GYRO) {
-			mNavX = new AHRS(mConfig.ports.NAVX); 
+			mNavX = new AHRS(mConfig.ports.NAVX);
 		}
 		mPDP = new PowerDistributionPanel();
 
@@ -137,7 +139,7 @@ public class Robot extends TimedRobot {
 			liftOutput = mConfig.liftConstants.LIFT_POWER_OUTPUT;
 		}
 
-		if(mConfig.runConstants.RUNNING_SHOOTER) {
+		if (mConfig.runConstants.RUNNING_SHOOTER) {
 			// leftShooterMotor = new SparkMax(mConfig.shooterConstants.MOTOR_CONFIG);
 			leftShooterMotor = new CANSparkMax(54, MotorType.kBrushless);
 			rightShooterMotor = new CANSparkMax(53, MotorType.kBrushless);
@@ -153,10 +155,10 @@ public class Robot extends TimedRobot {
 			beltMotor = new com.ctre.phoenix.motorcontrol.can.TalonSRX(31);
 			sideRoller = new com.ctre.phoenix.motorcontrol.can.TalonSRX(37);
 			shooterRPM = mConfig.shooterConstants.SHOOTER_RPM;
-			//panServo = new Servo(mConfig.shooterConstants.PAN_SERVO_PORT);
-			//hoodServo = new Servo(mConfig.shooterConstants.HOOD_SERVO_PORT);
-			//panServo.setBounds(2.5, 1.6, 1.5, 1.4, 0.5);
-			//hoodServo.setBounds(2.5, 1.6, 1.5, 1.4, 0.5);
+			panServo = new Servo(mConfig.shooterConstants.PAN_SERVO_PORT);
+			hoodServo = new Servo(mConfig.shooterConstants.HOOD_SERVO_PORT);
+			panServo.setBounds(2.5 * mConfig.shooterConstants.MAX_SERVO_SPEED, 1.6, 1.5, 1.4, 0.5 * mConfig.shooterConstants.MAX_SERVO_SPEED);
+			hoodServo.setBounds(2.5 * mConfig.shooterConstants.MAX_SERVO_SPEED, 1.6, 1.5, 1.4, 0.5 * mConfig.shooterConstants.MAX_SERVO_SPEED);
 		}
 
 		if (mConfig.runConstants.RUNNING_CAMERA) {
@@ -185,7 +187,7 @@ public class Robot extends TimedRobot {
 		}
 
 		// start game
-		startGame();		
+		startGame();
 	}
 
 	@Override
@@ -218,14 +220,14 @@ public class Robot extends TimedRobot {
 		swerveDrive();
 
 		if (mConfig.runConstants.RUNNING_INTAKE && mConfig.runConstants.SECONDARY_JOYSTICK) {
-			runIntake();	
+			runIntake();
 		}
 
 		if (mConfig.runConstants.RUNNING_LIFT && mConfig.runConstants.SECONDARY_JOYSTICK) {
-			runLift();	
+			runLift();
 		}
 
-		if(mConfig.runConstants.RUNNING_SHOOTER && mConfig.runConstants.SECONDARY_JOYSTICK) {
+		if (mConfig.runConstants.RUNNING_SHOOTER && mConfig.runConstants.SECONDARY_JOYSTICK) {
 			runShooter();
 		}
 
@@ -244,6 +246,7 @@ public class Robot extends TimedRobot {
 	}
 
 	String state = "IDLE";
+
 	private void runShooter() {
 		//check secondary for speed change
 		// if(mJoystick.getRawButtonReleased(mConfig.shooterConstants.SPEED_UP_BUTTON)) {
@@ -252,60 +255,59 @@ public class Robot extends TimedRobot {
 		// else if(mJoystick.getRawButtonReleased(mConfig.shooterConstants.SPEED_DOWN_BUTTON)) {
 		// 	shooterRPM -= mConfig.shooterConstants.RPM_INCREMENT;
 		// }
- 
+
 		// if (mJoystick.getRawButton(mConfig.shooterConstants.DRIVE_BUTTON)) {
 		// 	leftShooterMotor.set(0.2);	
 		// }
 		// else if (mJoystick.getRawButton(mConfig.shooterConstants.REVERSE_BUTTON)) {
 		// 	leftShooterMotor.set(-0.2);
-			
+
 		// } else {
 		// 	leftShooterMotor.set(0);
 		// }
 
-		if(mJoystick.getXButton()) {
+		if (mJoystick.getXButton()) {
 			state = "INTAKING";
 		}
-		if(mJoystick.getBButton()) {
+		if (mJoystick.getBButton()) {
 			state = "SHOOTING";
 		}
-		if(mJoystick.getAButton()) {
+		if (mJoystick.getAButton()) {
 			state = "HOLDING";
 		}
-		if(mJoystick.getYButton()) {
+		if (mJoystick.getYButton()) {
 			state = "IDLE";
 		}
-		switch(state) {
-			case "INTAKING":
-				intakeMotor.set(ControlMode.PercentOutput, 1);
-				beltMotor.set(ControlMode.PercentOutput, 0);
-				sideRoller.set(ControlMode.PercentOutput, 0);
-				leftShooterMotor.set(0);
-				break;
-			case "SHOOTING":
-				intakeMotor.set(ControlMode.PercentOutput, 0);
-				beltMotor.set(ControlMode.PercentOutput, -.5);
-				sideRoller.set(ControlMode.PercentOutput, .2);
-				leftShooterMotor.set(.2);
-				break;
-			case "HOLDING":
-				intakeMotor.set(ControlMode.PercentOutput, 0);
-				beltMotor.set(ControlMode.PercentOutput, 0);
-				sideRoller.set(ControlMode.PercentOutput, 0);
-				leftShooterMotor.set(.2);
-			default:
-				intakeMotor.set(ControlMode.PercentOutput, 0);
-				beltMotor.set(ControlMode.PercentOutput, 0);
-				sideRoller.set(ControlMode.PercentOutput, 0);
-				leftShooterMotor.set(0);
-				break;
+		switch (state) {
+		case "INTAKING":
+			intakeMotor.set(ControlMode.PercentOutput, 1);
+			beltMotor.set(ControlMode.PercentOutput, 0);
+			sideRoller.set(ControlMode.PercentOutput, 0);
+			leftShooterMotor.set(0);
+			break;
+		case "SHOOTING":
+			intakeMotor.set(ControlMode.PercentOutput, 0);
+			beltMotor.set(ControlMode.PercentOutput, -.5);
+			sideRoller.set(ControlMode.PercentOutput, .2);
+			leftShooterMotor.set(.2);
+			break;
+		case "HOLDING":
+			intakeMotor.set(ControlMode.PercentOutput, 0);
+			beltMotor.set(ControlMode.PercentOutput, 0);
+			sideRoller.set(ControlMode.PercentOutput, 0);
+			leftShooterMotor.set(.2);
+		default:
+			intakeMotor.set(ControlMode.PercentOutput, 0);
+			beltMotor.set(ControlMode.PercentOutput, 0);
+			sideRoller.set(ControlMode.PercentOutput, 0);
+			leftShooterMotor.set(0);
+			break;
 		}
 		double panPower = mJoystick.getX(Hand.kRight) * 0.9;
 		double hoodPower = mJoystick.getY(Hand.kRight) * 0.9;
-		// panServo.set(panPower);
-		// hoodServo.set(hoodPower);
+		panServo.set(panPower);
+		hoodServo.set(hoodPower);
 
-		
 		// SmartDashboard.putNumber("Shooter RPM", leftShooterMotor.get());
 		// SmartDashboard.putNumber("Shooter RPM Target", shooterRPM);
 		// SmartDashboard.putNumber("Shooter motor current draw", leftShooterMotor.g());
@@ -326,25 +328,39 @@ public class Robot extends TimedRobot {
 
 	private void runLift() {
 		//check secondary for speed change
-		if(mJoystick.getRawButtonReleased(mConfig.liftConstants.SPEED_UP_BUTTON)) {
+		if (mJoystick.getRawButtonReleased(mConfig.liftConstants.SPEED_UP_BUTTON)) {
 			liftOutput += mConfig.liftConstants.SPEED_INCREMENT;
-		}
-		else if(mJoystick.getRawButtonReleased(mConfig.liftConstants.SPEED_DOWN_BUTTON)) {
+		} else if (mJoystick.getRawButtonReleased(mConfig.liftConstants.SPEED_DOWN_BUTTON)) {
 			liftOutput -= mConfig.liftConstants.SPEED_INCREMENT;
 		}
- 
+
 		if (mJoystick.getRawButton(mConfig.liftConstants.DRIVE_BUTTON)) {
-			liftMotor.setOutput(liftOutput);	
-		}
-		else if (mJoystick.getRawButton(mConfig.liftConstants.REVERSE_BUTTON)) {
+			liftMotor.setOutput(liftOutput);
+		} else if (mJoystick.getRawButton(mConfig.liftConstants.REVERSE_BUTTON)) {
 			liftMotor.setOutput(-liftOutput);
-			
+
 		} else {
 			liftMotor.setOutput(0);
 		}
 		SmartDashboard.putNumber("Lift speed", liftMotor.getOutput());
 		SmartDashboard.putNumber("Lift speed we will set it to", liftOutput);
 		SmartDashboard.putNumber("Lift motor current draw", liftMotor.getCurrent());
+	}
+
+	private void runAim() {
+		class Limelight { public double get(String x) { return NetworkTableInstance.getDefault().getTable("limelight").getEntry(x).getDouble(0); } }
+
+		Limelight l = new Limelight();
+
+		if (l.get("tx") == 1) {
+			double targetX = l.get("tx");
+			double targetY = l.get("ty");
+			
+
+
+			panServo.set;
+		}
+
 	}
 
 	public void startGame() {

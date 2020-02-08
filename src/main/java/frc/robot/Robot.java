@@ -91,7 +91,8 @@ public class Robot extends TimedRobot {
 	private double shooterRPM;
 	private Servo panServo;
 	private Servo hoodServo;
-	private PIDController servoPID;
+	private PIDController panServoPID;
+	private PIDController hoodServoPID;
 	private com.ctre.phoenix.motorcontrol.can.TalonSRX sideRoller;
 	private NetworkTableInstance networkTable = NetworkTableInstance.getDefault();
 	private Limelight limelight;
@@ -165,7 +166,8 @@ public class Robot extends TimedRobot {
 			panServo.setBounds(2.5, 1.6, 1.5, 1.4, 0.5);
 			hoodServo.setBounds(2.5, 1.6, 1.5, 1.4, 0.5);
 
-			servoPID = new PIDController(mConfig.shooterConstants.SERVO_P, mConfig.shooterConstants.SERVO_I, mConfig.shooterConstants.SERVO_D);
+			panServoPID = new PIDController(mConfig.shooterConstants.SERVO_P, mConfig.shooterConstants.SERVO_I, mConfig.shooterConstants.SERVO_D);
+			hoodServoPID = new PIDController(mConfig.shooterConstants.SERVO_P, mConfig.shooterConstants.SERVO_I, mConfig.shooterConstants.SERVO_D);
 		}
 
 		if (mConfig.runConstants.RUNNING_CAMERA) {
@@ -366,8 +368,8 @@ public class Robot extends TimedRobot {
 				double xTarget = limelight.get("tx");
 				double yTarget = limelight.get("ty");
 
-				panServo.set(servoPID.calculate(xTarget) * mConfig.shooterConstants.MAX_SERVO_SPEED);
-				hoodServo.set(servoPID.calculate(yTarget) * mConfig.shooterConstants.MAX_SERVO_SPEED);
+				panServo.set(panServoPID.calculate(xTarget) * mConfig.shooterConstants.MAX_SERVO_SPEED);
+				hoodServo.set(hoodServoPID.calculate(yTarget) * mConfig.shooterConstants.MAX_SERVO_SPEED);
 			}
 		}
 	}

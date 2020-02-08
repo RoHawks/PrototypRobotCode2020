@@ -11,7 +11,7 @@ import autonomous.AutonomousRoutineType;
 import autonomous.commands.AutonomousCommand;
 import autonomous.routines.DefaultRoutine;
 import autonomous.routines.DoNothingRoutine;
-import common.cameras.LimeLight;
+import common.cameras.Limelight;
 import common.motors.SparkMax;
 import common.motors.TalonSRX;
 import common.motors.configs.TalonSRXConfig;
@@ -94,7 +94,7 @@ public class Robot extends TimedRobot {
 	private PIDController servoPID;
 	private com.ctre.phoenix.motorcontrol.can.TalonSRX sideRoller;
 	private NetworkTableInstance networkTable = NetworkTableInstance.getDefault();
-	private LimeLight limeLight;
+	private Limelight limelight;
 
 	// ****************//
 	// GENERAL CODE //
@@ -172,7 +172,7 @@ public class Robot extends TimedRobot {
 			camera.setResolution(240, 180);
 			camera.setFPS(30);
 
-			limeLight = new LimeLight(networkTable.getTable("limelight"));
+			limelight = new Limelight(networkTable.getTable("limelight"));
 		}
 
 		if (mConfig.runConstants.RUNNING_PNEUMATICS) {
@@ -357,9 +357,9 @@ public class Robot extends TimedRobot {
 
 	private void runAim() {
 
-		if (limeLight.get("tx") == 1) {
-			double targetX = limeLight.get("tx");
-			double targetY = limeLight.get("ty");
+		if (limelight.get("tx") == 1) {
+			double targetX = limelight.get("tx");
+			double targetY = limelight.get("ty");
 		}
 
 	}

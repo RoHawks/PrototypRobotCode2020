@@ -111,7 +111,7 @@ public class Config {
 
         public double 
             MAX_ANGULAR_VELOCITY = 1.0, 
-            MAX_LINEAR_VELOCITY = 0.5;
+            MAX_LINEAR_VELOCITY = 1.0;
 
         public int
             PID_INDEX = 0, 

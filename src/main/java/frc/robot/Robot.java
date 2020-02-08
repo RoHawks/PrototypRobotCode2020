@@ -162,8 +162,8 @@ public class Robot extends TimedRobot {
 			shooterRPM = mConfig.shooterConstants.SHOOTER_RPM;
 			panServo = new Servo(mConfig.shooterConstants.PAN_SERVO_PORT);
 			hoodServo = new Servo(mConfig.shooterConstants.HOOD_SERVO_PORT);
-			panServo.setBounds(2.5 * mConfig.shooterConstants.MAX_SERVO_SPEED, 1.6, 1.5, 1.4, 0.5 * mConfig.shooterConstants.MAX_SERVO_SPEED);
-			hoodServo.setBounds(2.5 * mConfig.shooterConstants.MAX_SERVO_SPEED, 1.6, 1.5, 1.4, 0.5 * mConfig.shooterConstants.MAX_SERVO_SPEED);
+			panServo.setBounds(2.5, 1.6, 1.5, 1.4, 0.5);
+			hoodServo.setBounds(2.5, 1.6, 1.5, 1.4, 0.5);
 
 			servoPID = new PIDController(mConfig.shooterConstants.SERVO_P, mConfig.shooterConstants.SERVO_I, mConfig.shooterConstants.SERVO_D);
 		}
@@ -366,8 +366,8 @@ public class Robot extends TimedRobot {
 				double xTarget = limelight.get("tx");
 				double yTarget = limelight.get("ty");
 
-				panServo.set(servoPID.calculate(xTarget));
-				hoodServo.set(servoPID.calculate(yTarget));
+				panServo.set(servoPID.calculate(xTarget) * mConfig.shooterConstants.MAX_SERVO_SPEED);
+				hoodServo.set(servoPID.calculate(yTarget) * mConfig.shooterConstants.MAX_SERVO_SPEED);
 			}
 		}
 	}

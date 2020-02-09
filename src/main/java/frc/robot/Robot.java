@@ -163,11 +163,11 @@ public class Robot extends TimedRobot {
 			shooterRPM = mConfig.shooterConstants.SHOOTER_RPM;
 			panServo = new Servo(mConfig.shooterConstants.PAN_SERVO_PORT);
 			hoodServo = new Servo(mConfig.shooterConstants.HOOD_SERVO_PORT);
-			panServo.setBounds(2.5, 1.6, 1.5, 1.4, 0.5);
-			hoodServo.setBounds(2.5, 1.6, 1.5, 1.4, 0.5);
+			panServo.setBounds(2.5, 1.5, 1.5, 1.5, 0.5);
+			hoodServo.setBounds(2.5, 1.5, 1.5, 1.5, 0.5);
 
-			panServoPID = new PIDController(mConfig.shooterConstants.SERVO_P, mConfig.shooterConstants.SERVO_I, mConfig.shooterConstants.SERVO_D);
-			hoodServoPID = new PIDController(mConfig.shooterConstants.SERVO_P, mConfig.shooterConstants.SERVO_I, mConfig.shooterConstants.SERVO_D);
+			panServoPID = new PIDController(mConfig.shooterConstants.PAN_SERVO_P, mConfig.shooterConstants.PAN_SERVO_I, mConfig.shooterConstants.PAN_SERVO_D);
+			hoodServoPID = new PIDController(mConfig.shooterConstants.HOOD_SERVO_P, mConfig.shooterConstants.HOOD_SERVO_I, mConfig.shooterConstants.HOOD_SERVO_D);
 		}
 
 		if (mConfig.runConstants.RUNNING_CAMERA) {
@@ -304,13 +304,13 @@ public class Robot extends TimedRobot {
 				intakeMotor.set(ControlMode.PercentOutput, 0);
 				beltMotor.set(ControlMode.PercentOutput, -.5);
 				sideRoller.set(ControlMode.PercentOutput, .2);
-				leftShooterMotor.set(.2);
+				leftShooterMotor.set(1);
 				break;
 			case "HOLDING":
 				intakeMotor.set(ControlMode.PercentOutput, 0);
 				beltMotor.set(ControlMode.PercentOutput, 0);
 				sideRoller.set(ControlMode.PercentOutput, 0);
-				leftShooterMotor.set(.2);
+				leftShooterMotor.set(1);
 				break;
 			default:
 				intakeMotor.set(ControlMode.PercentOutput, 0);
@@ -360,14 +360,35 @@ public class Robot extends TimedRobot {
 	}
 
 	private void runAim() {
-		if (mController.getRawButtonPressed(mConfig.shooterConstants.AIM_BUTTON)) {
+		if (mJoystick.getBumper(Hand.kRight)) {
 			if (limelight.get("tv") == 1) {
 				double xTarget = limelight.get("tx");
 				double yTarget = limelight.get("ty");
-
-				panServo.set(panServoPID.calculate(xTarget) * mConfig.shooterConstants.MAX_SERVO_SPEED);
-				hoodServo.set(hoodServoPID.calculate(yTarget) * mConfig.shooterConstants.MAX_SERVO_SPEED);
+				SmartDashboard.putNumber("limelight x target", xTarget);
+				SmartDashboard.putNumber("limelight y target", yTarget);
+				double panServoSpeed = panServoPID.calculate(xTarget);
+				double hoodServoSpeed = hoodServoPID.calculate(yTarget);
+				panServoSpeed = panServoSpeed > 1 ? 1 : panServoSpeed;
+				panServoSpeed = panServoSpeed < -1 ? -1 : panServoSpeed;
+				hoodServoSpeed = hoodServoSpeed > 1 ? 1 : hoodServoSpeed;
+				hoodServoSpeed = hoodServoSpeed < -1 ? -1 : hoodServoSpeed;
+				panServoSpeed *=  mConfig.shooterConstants.MAX_SERVO_SPEED;
+				hoodServoSpeed *=  mConfig.shooterConstants.MAX_SERVO_SPEED;
+				SmartDashboard.putNumber("pan servo speed", panServoSpeed);
+				SmartDashboard.putNumber("hood servo speed", hoodServoSpeed);
+				panServo.setSpeed(panServoSpeed);
+				hoodServo.setSpeed(hoodServoSpeed);
 			}
+		}
+		else {
+			double panSpeed = -mJoystick.getX(Hand.kRight);
+			double hoodSpeed = mJoystick.getY(Hand.kRight);
+			SmartDashboard.putNumber("manual pan speed %", panSpeed);
+			SmartDashboard.putNumber("manual hood speed %", hoodSpeed);
+			panSpeed = Math.abs(panSpeed) < .2 ? 0 : panSpeed;
+			hoodSpeed = Math.abs(hoodSpeed) < .2 ? 0 : hoodSpeed;
+			panServo.setSpeed(panSpeed * .9);
+			hoodServo.setSpeed(hoodSpeed * .9);
 		}
 	}
 

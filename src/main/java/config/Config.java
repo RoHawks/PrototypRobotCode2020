@@ -113,7 +113,7 @@ public class Config {
                 D = 0,
                 iZone = 500;
 
-            public PIDConfig PID_CONFIG = new PIDConfig(P, I, D, iZone);
+            public PIDConfig PID_CONFIG = new PIDConfig(P, I, D, iZone); // TODO: construct REVSRSConfig here with PIDConfig and ports 
         }
 
         public class TurretServo {

@@ -161,13 +161,13 @@ public class Robot extends TimedRobot {
 			beltMotor = new com.ctre.phoenix.motorcontrol.can.TalonSRX(31);
 			sideRoller = new com.ctre.phoenix.motorcontrol.can.TalonSRX(37);
 			shooterRPM = 0;
-			panServo = new Servo(mConfig.shooterConstants.PAN_SERVO_PORT);
-			hoodServo = new Servo(mConfig.shooterConstants.HOOD_SERVO_PORT);
+			panServo = new Servo(mConfig.shooterConstants.TURRET.PORT);
+			hoodServo = new Servo(mConfig.shooterConstants.HOOD.PORT);
 			panServo.setBounds(2.5, 1.5, 1.5, 1.5, 0.5);
 			hoodServo.setBounds(2.5, 1.5, 1.5, 1.5, 0.5);
 
-			panServoPID = new PIDController(mConfig.shooterConstants.PAN_SERVO_P, mConfig.shooterConstants.PAN_SERVO_I, mConfig.shooterConstants.PAN_SERVO_D);
-			hoodServoPID = new PIDController(mConfig.shooterConstants.HOOD_SERVO_P, mConfig.shooterConstants.HOOD_SERVO_I, mConfig.shooterConstants.HOOD_SERVO_D);
+			panServoPID = new PIDController(mConfig.shooterConstants.TURRET.P, mConfig.shooterConstants.TURRET.I, mConfig.shooterConstants.TURRET.D);
+			hoodServoPID = new PIDController(mConfig.shooterConstants.HOOD.P, mConfig.shooterConstants.HOOD.I, mConfig.shooterConstants.HOOD.D);
 		}
 
 		if (mConfig.runConstants.RUNNING_CAMERA) {
@@ -372,8 +372,8 @@ public class Robot extends TimedRobot {
 				panServoSpeed = panServoSpeed < -1 ? -1 : panServoSpeed;
 				hoodServoSpeed = hoodServoSpeed > 1 ? 1 : hoodServoSpeed;
 				hoodServoSpeed = hoodServoSpeed < -1 ? -1 : hoodServoSpeed;
-				panServoSpeed *=  mConfig.shooterConstants.MAX_SERVO_SPEED;
-				hoodServoSpeed *=  mConfig.shooterConstants.MAX_SERVO_SPEED;
+				panServoSpeed *=  mConfig.shooterConstants.TURRET.MAX_SPEED;
+				hoodServoSpeed *=  mConfig.shooterConstants.HOOD.MAX_SPEED;
 				SmartDashboard.putNumber("pan servo speed", panServoSpeed);
 				SmartDashboard.putNumber("hood servo speed", hoodServoSpeed);
 				panServo.setSpeed(panServoSpeed);

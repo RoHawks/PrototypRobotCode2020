@@ -63,41 +63,79 @@ public class Config {
         public ITalonSRXConfig MOTOR_CONFIG = new TalonSRXConfig(LIFT_PORT, LIFT_INVERTED);
     }
 
-    public class ShooterConstants {
-        
-        public int 
-            BELT_PORT = 55, //TODO Insert correct belt port,
-            LEFT_SHOOTER_PORT = 50, //TODO Insert correct port
-            RIGHT_SHOOTER_PORT = 50, //TODO Insert correct port
-            PAN_SERVO_PORT = 0, //TODO Insert correct port
-            HOOD_SERVO_PORT = 1, //TODO Insert correct port
-            SPEED_UP_BUTTON = 4, //Y button
-            SPEED_DOWN_BUTTON = 1, //A button
-            DRIVE_BUTTON = 6, //Right shoulder button
-            REVERSE_BUTTON = 5, //Left shoulder button
-            AIM_BUTTON = 4; // Y button
-        public boolean SHOOTER_INVERTED = true;
-        public double 
-            SHOOTER_RPM = 0,
-            RPM_INCREMENT = 100,
-            P = 1,
-            I = .001,
-            D = 0,
-            iZone = 500,
-            MAX_SERVO_SPEED = 0.9,
-            HOOD_SERVO_P = 1,
-            HOOD_SERVO_I = 2.5,
-            HOOD_SERVO_D = 0,
-            HOOD_SERVO_TOLERANCE = 1000,
-            PAN_SERVO_P = 1,
-            PAN_SERVO_I = 2.5,
-            PAN_SERVO_D = 0,
-            PAN_SERVO_TOLERANCE = 1000;
 
-        public SparkMaxWithEncoderConfig MOTOR_CONFIG = new SparkMaxWithEncoderConfig(new SparkMaxConfig(LEFT_SHOOTER_PORT, SHOOTER_INVERTED), 
-                                                                                      new BaseEncoderConfig(0, false), 
-                                                                                      new PIDConfig(P, I, D, iZone));
-                                                                                    
+    public class ShooterConstants {
+
+        public Flywheel FLYWHEEL = new Flywheel();
+        public HoodServo HOOD = new HoodServo();
+        public TurretServo TURRET = new TurretServo();
+        public Belt BELT = new Belt();
+
+        public class Flywheel {
+
+            public int 
+                LEFT_MOTOR_PORT = 50, //TODO Insert correct port
+                RIGHT_MOTOR_PORT = 50, //TODO Insert correct port
+
+                // SPEED_UP_BUTTON = 4, //Y button
+                // SPEED_DOWN_BUTTON = 1, //A button
+                DRIVE_BUTTON = 6, //Right shoulder button
+                REVERSE_BUTTON = 5, //Left shoulder button
+                AIM_BUTTON = 4; // Y butto
+
+            public boolean SHOOTER_INVERTED = true;
+
+            public double
+                RPM_INCREMENT = 100,
+                P = 1,
+                I = .001,
+                D = 0,
+                iZone = 500;
+                
+            public SparkMaxWithEncoderConfig MOTOR_CONFIG = new SparkMaxWithEncoderConfig(
+                new SparkMaxConfig(LEFT_MOTOR_PORT, SHOOTER_INVERTED),
+                new BaseEncoderConfig(0, false),
+                new PIDConfig(P, I, D, iZone)
+                );
+        }
+
+        public class HoodServo {
+
+            public int
+                PORT = 1, //TODO Insert correct port
+                CLOCKWISE_BUTTON = 6, //Right shoulder button
+                COUNTERCLOCKWISE_BUTTON = 5; //Left shoulder button
+
+            public double
+                MAX_SPEED = 0.9,
+                P = 1,
+                I = 2.5,
+                D = 0,
+                iZone = 500;
+
+            public PIDConfig PID_CONFIG = new PIDConfig(P, I, D, iZone);
+        }
+
+        public class TurretServo {
+
+            public int
+                PORT = 0,
+                CLOCKWISE_BUTTON, COUNTERCLOCKWISE_BUTTON;
+
+            public double
+                MAX_SPEED = 0.9,
+                P = 1,
+                I = 2.5,
+                D = 0,
+                iZone = 500;
+
+            public PIDConfig PID_CONFIG = new PIDConfig(P, I, D, iZone);
+        }
+
+        public class Belt {
+
+            public int PORT = 55;
+        }
     }
 
     // Constatnts from RunConstants
@@ -126,7 +164,7 @@ public class Config {
 
         public double 
             MAX_ANGULAR_VELOCITY = 1.0, 
-            MAX_LINEAR_VELOCITY = .5;
+            MAX_LINEAR_VELOCITY = 0.5;
 
         public int
             PID_INDEX = 0, 
@@ -158,11 +196,11 @@ public class Config {
     }
 
     public class SwerveSpeeds {
-		public double 
-			SPEED_MULT = 1.0,
-			ANGULAR_SPEED_MULT = 1.0,
-			NUDGE_MOVE_SPEED = 0.2,
-			NUDGE_TURN_SPEED = 0.2;
+        public double 
+            SPEED_MULT = 1.0,
+            ANGULAR_SPEED_MULT = 1.0,
+            NUDGE_MOVE_SPEED = 0.2,
+            NUDGE_TURN_SPEED = 0.2;
     }
 
     public class LimeLightConstants {

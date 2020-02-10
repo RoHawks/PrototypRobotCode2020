@@ -37,27 +37,27 @@ public class Config {
 
     //Constants for the intake test mechanism
     public class IntakeConstants {    
-        public int 
+        public final int 
             INTAKE_PORT = 5,
             SPEED_UP_BUTTON = 4, //Y button
             SPEED_DOWN_BUTTON = 1; //A button
-        public boolean INTAKE_INVERTED = true;
-        public double 
+        public final boolean INTAKE_INVERTED = true;
+        public final double 
             INTAKE_POWER_OUTPUT = 1,
             SPEED_INCREMENT = .1;
     }
 
     public class LiftConstants {    
-        public int 
+        public final int 
             LIFT_PORT = 11,
             SPEED_UP_BUTTON = 4, //Y button
             SPEED_DOWN_BUTTON = 1, //A button
             DRIVE_BUTTON = 6, //Right shoulder button
             REVERSE_BUTTON = 5; //Left shoulder button
-        public boolean LIFT_INVERTED = true;
-        public boolean HAS_TOP_LIMIT_SWITCH = true;
-        public boolean HAS_BOTTOM_LIMIT_SWITCH = true;
-        public double 
+        public final boolean LIFT_INVERTED = true;
+        public final boolean HAS_TOP_LIMIT_SWITCH = true;
+        public final boolean HAS_BOTTOM_LIMIT_SWITCH = true;
+        public final double 
             LIFT_POWER_OUTPUT = 0,
             SPEED_INCREMENT = .05;
         public ITalonSRXConfig MOTOR_CONFIG = new TalonSRXConfig(LIFT_PORT, LIFT_INVERTED);
@@ -73,7 +73,7 @@ public class Config {
 
         public class Flywheel {
 
-            public int 
+            public final int 
                 LEFT_MOTOR_PORT = 50, //TODO Insert correct port
                 RIGHT_MOTOR_PORT = 50, //TODO Insert correct port
 
@@ -83,9 +83,9 @@ public class Config {
                 REVERSE_BUTTON = 5, //Left shoulder button
                 AIM_BUTTON = 4; // Y butto
 
-            public boolean SHOOTER_INVERTED = true;
+            public final boolean SHOOTER_INVERTED = true;
 
-            public double
+            public final double
                 RPM_INCREMENT = 100,
                 P = 1,
                 I = .001,
@@ -101,12 +101,12 @@ public class Config {
 
         public class HoodServo {
 
-            public int
+            public final int
                 PORT = 1, //TODO Insert correct port
                 CLOCKWISE_BUTTON = 6, //Right shoulder button
                 COUNTERCLOCKWISE_BUTTON = 5; //Left shoulder button
 
-            public double
+            public final double
                 MAX_SPEED = 0.9,
                 P = 1,
                 I = 2.5,
@@ -118,11 +118,11 @@ public class Config {
 
         public class TurretServo {
 
-            public int
-                PORT = 0,
-                CLOCKWISE_BUTTON, COUNTERCLOCKWISE_BUTTON;
+            public final int
+                PORT = 0;
+                // CLOCKWISE_BUTTON, COUNTERCLOCKWISE_BUTTON;
 
-            public double
+            public final double
                 MAX_SPEED = 0.9,
                 P = 1,
                 I = 2.5,
@@ -134,7 +134,7 @@ public class Config {
 
         public class Belt {
 
-            public int PORT = 55;
+            public final int PORT = 55;
         }
     }
 
@@ -153,26 +153,26 @@ public class Config {
     // Constants from DriveConstants
     public class DriveConstants {
         //speed mins, when lower than these don't do anything
-        public double 
+        public final double 
             MIN_LINEAR_VELOCITY = 0.02, 
             MIN_DIRECTION_MAG = 0.25, // refers to joystick magnitudes
             MAX_INDIVIDUAL_VELOCITY = 1.0;
 
-        public double 
+        public final double 
             EMERGENCY_VOLTAGE = 10000, 
             MAX_EMERGENCY_VOLTAGE = 0.5;
 
-        public double 
+        public final double 
             MAX_ANGULAR_VELOCITY = 1.0, 
             MAX_LINEAR_VELOCITY = 0.5;
 
-        public int
+        public final int
             PID_INDEX = 0, 
             ROTATIONAL_TOLERANCE = 5,
             ROTATION_IZONE = 500,
             SENSOR_POSITION = 0;
 
-        public double 
+        public final double 
             GYRO_P = 0.004, 
             GYRO_I = 0.00002, 
             GYRO_D = 0, 
@@ -189,14 +189,14 @@ public class Config {
 
     public class Ports {
         public SerialPort.Port NAVX = Port.kMXP;
-        public int
+        public final int
             XBOX = 0,
             JOYSTICK = 1,
             COMPRESSOR = 0;
     }
 
     public class SwerveSpeeds {
-        public double 
+        public final double 
             SPEED_MULT = 1.0,
             ANGULAR_SPEED_MULT = 1.0,
             NUDGE_MOVE_SPEED = 0.2,

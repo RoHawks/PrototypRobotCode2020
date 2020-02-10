@@ -31,7 +31,6 @@ public class Robot2019Config extends Config {
         runConstants.SECONDARY_JOYSTICK = true;
         runConstants.RUNNING_LIFT = false;
         runConstants.RUNNING_GYRO = true;
-        ports.JOYSTICK = 1;
         for(int i = 0; i < wheelConfigs.length; i++) {
             wheelConfigs[i] = new WheelConfig(
                                 new SparkMaxConfig(DRIVE[i], DRIVE_INVERTED[i]),

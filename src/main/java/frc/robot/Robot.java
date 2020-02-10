@@ -160,7 +160,7 @@ public class Robot extends TimedRobot {
 
 			beltMotor = new com.ctre.phoenix.motorcontrol.can.TalonSRX(31);
 			sideRoller = new com.ctre.phoenix.motorcontrol.can.TalonSRX(37);
-			shooterRPM = mConfig.shooterConstants.SHOOTER_RPM;
+			shooterRPM = 0;
 			panServo = new Servo(mConfig.shooterConstants.PAN_SERVO_PORT);
 			hoodServo = new Servo(mConfig.shooterConstants.HOOD_SERVO_PORT);
 			panServo.setBounds(2.5, 1.5, 1.5, 1.5, 0.5);

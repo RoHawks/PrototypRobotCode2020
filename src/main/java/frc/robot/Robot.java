@@ -88,10 +88,10 @@ public class Robot extends TimedRobot {
 	private CANSparkMax leftShooterMotor;
 	private CANSparkMax rightShooterMotor;
 	private com.ctre.phoenix.motorcontrol.can.TalonSRX beltMotor;
-	private double shooterRPM;
+	private double shooterRPM; // TODO: abstract into motor
 	private Servo panServo;
 	private Servo hoodServo;
-	private PIDController panServoPID;
+	private PIDController panServoPID; // TODO: abstract PIDController into Servo wrapper
 	private PIDController hoodServoPID;
 	private com.ctre.phoenix.motorcontrol.can.TalonSRX sideRoller;
 	private NetworkTableInstance networkTable = NetworkTableInstance.getDefault();
@@ -293,31 +293,31 @@ public class Robot extends TimedRobot {
 		if (mJoystick.getYButton()) {
 			state = "IDLE";
 		}
-		switch(state) {
-			case "INTAKING":
-				intakeMotor.set(ControlMode.PercentOutput, .8);
-				beltMotor.set(ControlMode.PercentOutput, 0);
-				sideRoller.set(ControlMode.PercentOutput, 0);
-				leftShooterMotor.set(0);
-				break;
-			case "SHOOTING":
-				intakeMotor.set(ControlMode.PercentOutput, 0);
-				beltMotor.set(ControlMode.PercentOutput, -.5);
-				sideRoller.set(ControlMode.PercentOutput, .2);
-				leftShooterMotor.set(1);
-				break;
-			case "HOLDING":
-				intakeMotor.set(ControlMode.PercentOutput, 0);
-				beltMotor.set(ControlMode.PercentOutput, 0);
-				sideRoller.set(ControlMode.PercentOutput, 0);
-				leftShooterMotor.set(1);
-				break;
-			default:
-				intakeMotor.set(ControlMode.PercentOutput, 0);
-				beltMotor.set(ControlMode.PercentOutput, 0);
-				sideRoller.set(ControlMode.PercentOutput, 0);
-				leftShooterMotor.set(0);
-				break;
+		switch (state) {
+		case "INTAKING":
+			intakeMotor.set(ControlMode.PercentOutput, .8);
+			beltMotor.set(ControlMode.PercentOutput, 0);
+			sideRoller.set(ControlMode.PercentOutput, 0);
+			leftShooterMotor.set(0);
+			break;
+		case "SHOOTING":
+			intakeMotor.set(ControlMode.PercentOutput, 0);
+			beltMotor.set(ControlMode.PercentOutput, -.5);
+			sideRoller.set(ControlMode.PercentOutput, .2);
+			leftShooterMotor.set(1);
+			break;
+		case "HOLDING":
+			intakeMotor.set(ControlMode.PercentOutput, 0);
+			beltMotor.set(ControlMode.PercentOutput, 0);
+			sideRoller.set(ControlMode.PercentOutput, 0);
+			leftShooterMotor.set(1);
+			break;
+		default:
+			intakeMotor.set(ControlMode.PercentOutput, 0);
+			beltMotor.set(ControlMode.PercentOutput, 0);
+			sideRoller.set(ControlMode.PercentOutput, 0);
+			leftShooterMotor.set(0);
+			break;
 		}
 
 		// SmartDashboard.putNumber("Shooter RPM", leftShooterMotor.get());
@@ -372,15 +372,14 @@ public class Robot extends TimedRobot {
 				panServoSpeed = panServoSpeed < -1 ? -1 : panServoSpeed;
 				hoodServoSpeed = hoodServoSpeed > 1 ? 1 : hoodServoSpeed;
 				hoodServoSpeed = hoodServoSpeed < -1 ? -1 : hoodServoSpeed;
-				panServoSpeed *=  mConfig.shooterConstants.TURRET.MAX_SPEED;
-				hoodServoSpeed *=  mConfig.shooterConstants.HOOD.MAX_SPEED;
+				panServoSpeed *= mConfig.shooterConstants.TURRET.MAX_SPEED;
+				hoodServoSpeed *= mConfig.shooterConstants.HOOD.MAX_SPEED;
 				SmartDashboard.putNumber("pan servo speed", panServoSpeed);
 				SmartDashboard.putNumber("hood servo speed", hoodServoSpeed);
 				panServo.setSpeed(panServoSpeed);
 				hoodServo.setSpeed(hoodServoSpeed);
 			}
-		}
-		else {
+		} else {
 			double panSpeed = -mJoystick.getX(Hand.kRight);
 			double hoodSpeed = mJoystick.getY(Hand.kRight);
 			SmartDashboard.putNumber("manual pan speed %", panSpeed);

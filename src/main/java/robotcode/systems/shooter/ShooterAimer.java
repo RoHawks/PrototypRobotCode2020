@@ -2,6 +2,7 @@ package robotcode.systems.shooter;
 
 import common.cameras.Limelight;
 import common.servos.RevSRS;
+import common.servos.configs.RevSRSConfig;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.controller.PIDController;
 
@@ -26,25 +27,19 @@ public class ShooterAimer {
 
     public ShooterAimer(int panPotentiometerPort,
                         int hoodPotentiometerPort,
-                        int panServoPort,
-                        int hoodServoPort,
+                        RevSRSConfig panServoConfig, 
+                        RevSRSConfig hoodServoConfig,
                         boolean panServoInverted,
                         boolean hoodServoInverted,
-                        Limelight limelight, 
-                        double kPPan, 
-                        double kIPan, 
-                        double kDPan,
-                        double kPHood,
-                        double kIHood,
-                        double kDHood) {
+                        Limelight limelight) {
         panPotentiometer = new Potentiometer(panPotentiometerPort);
         hoodPotentiometer = new Potentiometer(hoodPotentiometerPort);
-        panServo = new RevSRS(panServoPort);
+        panServo = new RevSRS(panServoConfig);
+        hoodServo = new RevSRS(hoodServoConfig);
+        panServoPID = panServo.getPID();
+        hoodServoPID = hoodServo.getPID();
         this.panServoInverted = panServoInverted;
         this.hoodServoInverted = hoodServoInverted;
-        hoodServo = new RevSRS(hoodServoPort);
-        panServoPID = new PIDController(kPPan, kIPan, kDPan); //Make Config file
-        hoodServoPID = new PIDController(kPHood, kIHood, kDHood);
     }
 
     public void aimAuto() {

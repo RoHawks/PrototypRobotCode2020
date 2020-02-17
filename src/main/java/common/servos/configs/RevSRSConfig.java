@@ -16,6 +16,11 @@ public class RevSRSConfig extends BasePWMConfig implements IRevSRSConfig {
         this.speedCap = speedCap;
     }
 
+    public RevSRSConfig(int port, double speedCap) {
+        super(port);
+        this.speedCap = speedCap;
+    }
+
     @Override
     public PIDConfig getPIDConfig() {
         return pidConfig;

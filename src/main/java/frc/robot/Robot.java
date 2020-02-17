@@ -17,6 +17,7 @@ import common.motors.TalonSRX;
 import common.motors.configs.TalonSRXConfig;
 import common.motors.interfaces.IMotor;
 import common.motors.interfaces.IMotorWithEncoder;
+import common.servos.RevSRS;
 import config.Config;
 import config.LiftTestConfig;
 import config.Robot2017Config;
@@ -89,10 +90,8 @@ public class Robot extends TimedRobot {
 	private CANSparkMax rightShooterMotor;
 	private com.ctre.phoenix.motorcontrol.can.TalonSRX beltMotor;
 	private double shooterRPM;
-	private Servo panServo;
-	private Servo hoodServo;
-	private PIDController panServoPID;
-	private PIDController hoodServoPID;
+	private RevSRS panServo;
+	private RevSRS hoodServo;
 	private com.ctre.phoenix.motorcontrol.can.TalonSRX sideRoller;
 	private NetworkTableInstance networkTable = NetworkTableInstance.getDefault();
 	private Limelight limelight;
@@ -161,13 +160,8 @@ public class Robot extends TimedRobot {
 			beltMotor = new com.ctre.phoenix.motorcontrol.can.TalonSRX(31);
 			sideRoller = new com.ctre.phoenix.motorcontrol.can.TalonSRX(37);
 			shooterRPM = mConfig.shooterConstants.SHOOTER_RPM;
-			panServo = new Servo(mConfig.shooterConstants.PAN_SERVO_PORT);
-			hoodServo = new Servo(mConfig.shooterConstants.HOOD_SERVO_PORT);
-			panServo.setBounds(2.5, 1.5, 1.5, 1.5, 0.5);
-			hoodServo.setBounds(2.5, 1.5, 1.5, 1.5, 0.5);
-
-			panServoPID = new PIDController(mConfig.shooterConstants.PAN_SERVO_P, mConfig.shooterConstants.PAN_SERVO_I, mConfig.shooterConstants.PAN_SERVO_D);
-			hoodServoPID = new PIDController(mConfig.shooterConstants.HOOD_SERVO_P, mConfig.shooterConstants.HOOD_SERVO_I, mConfig.shooterConstants.HOOD_SERVO_D);
+			panServo = new RevSRS(mConfig.shooterConstants.panServoConfig);
+			hoodServo = new RevSRS(mConfig.shooterConstants.hoodServoConfig);
 		}
 
 		if (mConfig.runConstants.RUNNING_CAMERA) {
@@ -364,20 +358,12 @@ public class Robot extends TimedRobot {
 			if (limelight.get("tv") == 1) {
 				double xTarget = limelight.get("tx");
 				double yTarget = limelight.get("ty");
+				panServo.setSpeed(xTarget);
+				hoodServo.setSpeed(yTarget);
 				SmartDashboard.putNumber("limelight x target", xTarget);
 				SmartDashboard.putNumber("limelight y target", yTarget);
-				double panServoSpeed = panServoPID.calculate(xTarget);
-				double hoodServoSpeed = hoodServoPID.calculate(yTarget);
-				panServoSpeed = panServoSpeed > 1 ? 1 : panServoSpeed;
-				panServoSpeed = panServoSpeed < -1 ? -1 : panServoSpeed;
-				hoodServoSpeed = hoodServoSpeed > 1 ? 1 : hoodServoSpeed;
-				hoodServoSpeed = hoodServoSpeed < -1 ? -1 : hoodServoSpeed;
-				panServoSpeed *=  mConfig.shooterConstants.MAX_SERVO_SPEED;
-				hoodServoSpeed *=  mConfig.shooterConstants.MAX_SERVO_SPEED;
-				SmartDashboard.putNumber("pan servo speed", panServoSpeed);
-				SmartDashboard.putNumber("hood servo speed", hoodServoSpeed);
-				panServo.setSpeed(panServoSpeed);
-				hoodServo.setSpeed(hoodServoSpeed);
+				SmartDashboard.putNumber("pan servo speed", panServo.getTargetOutput());
+				SmartDashboard.putNumber("hood servo speed", hoodServo.getTargetOutput());
 			}
 		}
 		else {

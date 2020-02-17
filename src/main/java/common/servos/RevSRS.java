@@ -23,7 +23,7 @@ public class RevSRS extends Servo {
     private Mode mode;
     private final double maxSpeed = 1d;
     private final double minSpeed = -0.998d;
-    private double currentSpeed;
+    private double targetOutput;
     private PIDController pid;
     private double speedCap;
 
@@ -45,8 +45,8 @@ public class RevSRS extends Servo {
     }
 
     public void setPIDSpeed(double target) {
-        currentSpeed = pid.calculate(target);
-        setSpeed(currentSpeed);
+        targetOutput = pid.calculate(target);
+        setSpeed(targetOutput);
     }
 
     @Override
@@ -60,8 +60,8 @@ public class RevSRS extends Servo {
             output = maxSpeed;
         }
 
-        currentSpeed = output * speedCap;
-        super.setSpeed(currentSpeed);
+        targetOutput = output * speedCap;
+        super.setSpeed(targetOutput);
     }
 
     @Override
@@ -69,6 +69,6 @@ public class RevSRS extends Servo {
         if (mode != Mode.Continuous) {
             return 0;
         }
-        return currentSpeed;
+        return targetOutput;
     }
 }

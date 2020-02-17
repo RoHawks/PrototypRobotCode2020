@@ -51,8 +51,9 @@ public class RevSRS extends Servo {
         } else if (output > maxSpeed) {
             output = maxSpeed;
         }
+
         currentSpeed = output;
-        setSpeed(output);
+        super.setSpeed(output);
     }
 
     @Override

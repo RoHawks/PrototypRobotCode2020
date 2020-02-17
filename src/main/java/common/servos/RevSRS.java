@@ -1,5 +1,7 @@
 package common.servos;
 
+import common.pid.configs.PIDConfig;
+import common.servos.configs.RevSRSConfig;
 import common.servos.configs.interfaces.IPWMConfig;
 import common.servos.interfaces.IAngularServo;
 import common.servos.interfaces.IContinuousServo;
@@ -24,10 +26,16 @@ public class RevSRS extends Servo {
 
     private double currentSpeed;
 
-    public RevSRS(int port) {
-        super(port);
+    private PIDController pid;
+
+    public RevSRS(RevSRSConfig config) {
+        super(config.getPort());
         mode = Mode.Continuous; //If we need a angular mode, then we add another argument to constructor
         setBounds(2.5, 1.5, 1.5, 1.5, 0.5);
+
+        PIDConfig pidConfig = config.getPIDConfig();
+
+        pid = new PIDController(pidConfig.getP(), pidConfig.getI(), pidConfig.getD(), pidConfig.getIZone());
     }
 
     @Override

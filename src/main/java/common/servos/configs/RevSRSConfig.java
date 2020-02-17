@@ -8,10 +8,12 @@ public class RevSRSConfig extends BasePWMConfig implements IRevSRSConfig {
 
     protected int port;
     protected PIDConfig pidConfig;
+    protected double speedCap;
 
-    public RevSRSConfig(int port, PIDConfig pidConfig) {
+    public RevSRSConfig(int port, double speedCap, PIDConfig pidConfig) {
         super(port);
         this.pidConfig = pidConfig;
+        this.speedCap = speedCap;
     }
 
     @Override
@@ -19,4 +21,8 @@ public class RevSRSConfig extends BasePWMConfig implements IRevSRSConfig {
         return pidConfig;
     }
 
+    @Override
+    public double getSpeedCap() {
+        return speedCap;
+    }
 }

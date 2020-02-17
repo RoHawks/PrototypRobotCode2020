@@ -3,4 +3,5 @@ import common.pid.configs.PIDConfig;
 
 public interface IRevSRSConfig extends IPWMConfig {
     PIDConfig getPIDConfig();
+    double getSpeedCap();
 }

@@ -26,6 +26,8 @@ public class RevSRS extends Servo {
     private double currentSpeed;
     private PIDController pid;
 
+    private double percentOutput;
+
     public RevSRS(RevSRSConfig config) {
         super(config.getPort());
         mode = Mode.Continuous; //If we need a angular mode, then we add another argument to constructor
@@ -41,6 +43,11 @@ public class RevSRS extends Servo {
         );
     }
 
+    public void setPIDSpeed(double target) {
+        currentSpeed = pid.calculate(target);
+        setSpeed(currentSpeed);
+    }
+
     @Override
     public void setSpeed(double output) {
         if (mode != Mode.Continuous) {
@@ -52,8 +59,8 @@ public class RevSRS extends Servo {
             output = maxSpeed;
         }
 
-        currentSpeed = output;
-        super.setSpeed(output);
+        currentSpeed = output * MA;
+        super.setSpeed(currentSpeed);
     }
 
     @Override
@@ -63,4 +70,5 @@ public class RevSRS extends Servo {
         }
         return currentSpeed;
     }
+
 }

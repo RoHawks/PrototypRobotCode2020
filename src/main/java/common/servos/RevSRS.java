@@ -71,4 +71,8 @@ public class RevSRS extends Servo {
         }
         return targetOutput;
     }
+
+    public double getTargetOutput() {
+        return targetOutput;
+    }
 }

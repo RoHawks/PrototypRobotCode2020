@@ -3,15 +3,15 @@ package common.servos.configs;
 import common.servos.configs.interfaces.IPWMConfig;
 
 public class BasePWMConfig implements IPWMConfig {
-    protected int channel;
+    protected int port;
 
-    public BasePWMConfig(int channel) {
-        this.channel = channel;
+    public BasePWMConfig(int port) {
+        this.port = port;
     }
 
     @Override
-    public int getChannel() {
-        return channel;
+    public int getPort() {
+        return port;
     }
 
 }

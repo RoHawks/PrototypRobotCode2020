@@ -8,6 +8,7 @@ import common.motors.configs.SparkMaxWithEncoderConfig;
 import common.motors.configs.TalonSRXConfig;
 import common.motors.configs.interfaces.ITalonSRXConfig;
 import common.pid.configs.PIDConfig;
+import common.servos.configs.RevSRSConfig;
 import drivetrain.swerve.wheels.configs.WheelConfig;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.SerialPort.Port;
@@ -88,15 +89,30 @@ public class Config {
             HOOD_SERVO_P = 1,
             HOOD_SERVO_I = 2.5,
             HOOD_SERVO_D = 0,
-            HOOD_SERVO_TOLERANCE = 1000,
+            HOOD_SERVO_IZONE = 0,
             PAN_SERVO_P = 1,
             PAN_SERVO_I = 2.5,
             PAN_SERVO_D = 0,
-            PAN_SERVO_TOLERANCE = 1000;
+            PAN_SERVO_IZONE = 0;
 
-        public SparkMaxWithEncoderConfig MOTOR_CONFIG = new SparkMaxWithEncoderConfig(new SparkMaxConfig(LEFT_SHOOTER_PORT, SHOOTER_INVERTED), 
-                                                                                      new BaseEncoderConfig(0, false), 
-                                                                                      new PIDConfig(P, I, D, iZone));
+        public SparkMaxWithEncoderConfig MOTOR_CONFIG = new SparkMaxWithEncoderConfig
+            (new SparkMaxConfig(LEFT_SHOOTER_PORT, SHOOTER_INVERTED),
+            new BaseEncoderConfig(0, false),
+            new PIDConfig(P, I, D, iZone)
+        );
+
+        // TODO: clean this up when import config from baserobotcode
+        public RevSRSConfig hoodServoConfig = new RevSRSConfig(
+            HOOD_SERVO_PORT,
+            1,
+            new PIDConfig(HOOD_SERVO_P, HOOD_SERVO_I, HOOD_SERVO_D, HOOD_SERVO_IZONE)
+        );
+
+        public RevSRSConfig panServoConfig = new RevSRSConfig(
+            PAN_SERVO_PORT,
+            1,
+            new PIDConfig(PAN_SERVO_P, PAN_SERVO_I, PAN_SERVO_D, PAN_SERVO_IZONE)
+        );
                                                                                     
     }
 

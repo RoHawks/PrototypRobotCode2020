@@ -18,7 +18,9 @@ public class Shooter {
     private CANSparkMax leftShooterMotor;
     private CANSparkMax rightShooterMotor;
     private com.ctre.phoenix.motorcontrol.can.TalonSRX beltMotor;
-	private double shooterRPM;
+    private double shooterRPM = 0;
+    private final double BELT_MOTOR_OUTPUT = -0.5;
+    private final double EPSILON = 2E-2;
 
     private ShooterAimer shooterAimer;
 
@@ -35,22 +37,23 @@ public class Shooter {
     public void shooting(double panSpeed, double hoodSpeed) { //goal is to make it one method that sense automatically when to stop shooting
         shooterAimer.aimManual(panSpeed, hoodSpeed);
         leftShooterMotor.set(1); //when we switch to RPM, check to make sure repeatedly setting the setpoint does not mess up PID
-        if (Math.abs(1-leftShooterMotor.get()) < 2E-2) {
-            beltMotor.set(ControlMode.PercentOutput, -.5);
+        if (Math.abs(1-leftShooterMotor.get()) < EPSILON) {
+            beltMotor.set(ControlMode.PercentOutput, BELT_MOTOR_OUTPUT);
         }
     }
     
     public void shooting() { //goal is to make it one method that sense automatically when to stop shooting
         shooterAimer.aimAuto();
         leftShooterMotor.set(1); //when we switch to RPM, check to make sure repeatedly setting the setpoint does not mess up PID
-        if (Math.abs(1-leftShooterMotor.get()) < 2E-2) {
-            beltMotor.set(ControlMode.PercentOutput, -.5); 
+        if (Math.abs(1-leftShooterMotor.get()) < EPSILON) {
+            beltMotor.set(ControlMode.PercentOutput, BELT_MOTOR_OUTPUT); 
         }
     }
 
     public void idle() {
         leftShooterMotor.set(0);
         beltMotor.set(ControlMode.PercentOutput, 0);
+        shooterAimer.aimManual(0, 0);
     }
 
 }

@@ -16,7 +16,9 @@ public class ShooterAimer {
 
     
     private RevSRS panServo;
+    private boolean panServoInverted;
     private RevSRS hoodServo;
+    private boolean hoodServoInverted;
     private PIDController panServoPID;
     private PIDController hoodServoPID;
 
@@ -25,7 +27,9 @@ public class ShooterAimer {
     public ShooterAimer(int panPotentiometerPort,
                         int hoodPotentiometerPort,
                         int panServoPort,
-                        int hoodServoPort, 
+                        int hoodServoPort,
+                        boolean panServoInverted,
+                        boolean hoodServoInverted,
                         Limelight limelight, 
                         double kPPan, 
                         double kIPan, 
@@ -36,6 +40,8 @@ public class ShooterAimer {
         panPotentiometer = new Potentiometer(panPotentiometerPort);
         hoodPotentiometer = new Potentiometer(hoodPotentiometerPort);
         panServo = new RevSRS(panServoPort);
+        this.panServoInverted = panServoInverted;
+        this.hoodServoInverted = hoodServoInverted;
         hoodServo = new RevSRS(hoodServoPort);
         panServoPID = new PIDController(kPPan, kIPan, kDPan); //Make Config file
         hoodServoPID = new PIDController(kPHood, kIHood, kDHood);
@@ -50,6 +56,9 @@ public class ShooterAimer {
             if (inRange(panPotentiometer, MIN_PAN_POSITION, MAX_PAN_POSITION, panServoSpeed) && inRange(hoodPotentiometer, MIN_HOOD_POSITION, MAX_HOOD_POSITION, hoodServoSpeed)) {
                 //only move if the speed is pointed in a direction that will not make the servo run off the rails.
                 //if the servo is on one end of the rails, then it can only spin in a direction that moves the servo away from that end
+                //Servo speed should be positive for rotating CLOCKWISE
+                panServoSpeed = panServoInverted ? panServoSpeed * -1: panServoSpeed;
+                hoodServoSpeed = hoodServoInverted ? hoodServoSpeed * -1: hoodServoSpeed;
                 panServo.setSpeed(panServoSpeed); 
                 hoodServo.setSpeed(hoodServoSpeed);
             } else {
@@ -61,6 +70,8 @@ public class ShooterAimer {
 
     public void aimManual(double panSpeed, double hoodSpeed) { //make sure to smooth joystick input (< 0.2 means 0 speed) in robot.java
         if (inRange(panPotentiometer, MIN_PAN_POSITION, MAX_PAN_POSITION, panSpeed) && inRange(hoodPotentiometer, MIN_HOOD_POSITION, MAX_HOOD_POSITION, hoodSpeed)) {
+            panSpeed = panServoInverted ? panSpeed * -1: panSpeed;
+            hoodSpeed = hoodServoInverted ? hoodSpeed * -1: hoodSpeed;
             panServo.setSpeed(panSpeed);
             hoodServo.setSpeed(hoodSpeed);
         } else {

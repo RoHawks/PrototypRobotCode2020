@@ -8,6 +8,13 @@ public class PIDConfig implements IPIDConfig {
     protected final double d;
     protected final double iZone;
 
+    public PIDConfig(double p, double i, double d) {
+        this.p = p;
+        this.i = i;
+        this.d = d;
+        this.iZone = 0.02; // TODO: consider more thoughtful default value
+    }
+
     public PIDConfig(double p, double i, double d, double iZone) {
         this.p = p;
         this.i = i;

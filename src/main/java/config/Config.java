@@ -8,10 +8,10 @@ import common.motors.configs.SparkMaxWithEncoderConfig;
 import common.motors.configs.TalonSRXConfig;
 import common.motors.configs.interfaces.ITalonSRXConfig;
 import common.pid.configs.PIDConfig;
-import common.servos.configs.RevSRSConfig;
 import drivetrain.swerve.wheels.configs.WheelConfig;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.SerialPort.Port;
+import common.servos.configs.RevSRSConfig;
 
 public class Config {
     public RunConstants runConstants;
@@ -19,10 +19,9 @@ public class Config {
     public Ports ports;
     public SwerveSpeeds swerveSpeeds;
     public WheelConfig[] wheelConfigs;
-    public IntakeConstants intakeConstants; 
-    public LiftConstants liftConstants; 
-    public ShooterConstants shooterConstants;
-    public LimeLightConstants limeLightConstants;
+    public IntakeConstants INTAKE; 
+    public LiftConstants LIFTER; 
+    public ShooterConstants SHOOTER;
 
     public Config() {
         runConstants = new RunConstants();
@@ -30,10 +29,9 @@ public class Config {
         ports = new Ports();
         swerveSpeeds = new SwerveSpeeds();
         wheelConfigs = new WheelConfig[4];
-        intakeConstants = new IntakeConstants(); 
-        liftConstants = new LiftConstants(); 
-        shooterConstants = new ShooterConstants();
-        limeLightConstants = new LimeLightConstants();
+        INTAKE = new IntakeConstants(); 
+        LIFTER = new LiftConstants(); 
+        SHOOTER = new ShooterConstants();
     }
 
     //Constants for the intake test mechanism
@@ -44,7 +42,7 @@ public class Config {
             SPEED_DOWN_BUTTON = 1; //A button
         public boolean INTAKE_INVERTED = true;
         public double 
-            INTAKE_POWER_OUTPUT = 1,
+            INTAKE_POWER_OUTPUT = 0,
             SPEED_INCREMENT = .1;
     }
 
@@ -65,56 +63,77 @@ public class Config {
     }
 
     public class ShooterConstants {
-        
-        public int 
-            BELT_PORT = 55, //TODO Insert correct belt port,
-            LEFT_SHOOTER_PORT = 50, //TODO Insert correct port
-            RIGHT_SHOOTER_PORT = 50, //TODO Insert correct port
-            PAN_SERVO_PORT = 0, //TODO Insert correct port
-            HOOD_SERVO_PORT = 1, //TODO Insert correct port
-            SPEED_UP_BUTTON = 4, //Y button
-            SPEED_DOWN_BUTTON = 1, //A button
-            DRIVE_BUTTON = 6, //Right shoulder button
-            REVERSE_BUTTON = 5, //Left shoulder button
-            AIM_BUTTON = 4; // Y button
-        public boolean SHOOTER_INVERTED = true;
-        public double 
-            SHOOTER_RPM = 0,
-            RPM_INCREMENT = 100,
-            P = 1,
-            I = .001,
-            D = 0,
-            iZone = 500,
-            MAX_SERVO_SPEED = 0.9,
-            HOOD_SERVO_P = 1,
-            HOOD_SERVO_I = 2.5,
-            HOOD_SERVO_D = 0,
-            HOOD_SERVO_IZONE = 0,
-            PAN_SERVO_P = 1,
-            PAN_SERVO_I = 2.5,
-            PAN_SERVO_D = 0,
-            PAN_SERVO_IZONE = 0;
+        public Flywheel FLYWHEEL = new Flywheel();
+        public Hood HOOD = new Hood();
+        public Pan PAN = new Pan();
+        public Belt BELT = new Belt();
 
-        public SparkMaxWithEncoderConfig MOTOR_CONFIG = new SparkMaxWithEncoderConfig
-            (new SparkMaxConfig(LEFT_SHOOTER_PORT, SHOOTER_INVERTED),
-            new BaseEncoderConfig(0, false),
-            new PIDConfig(P, I, D, iZone)
-        );
+        public class Flywheel {
+            public int 
+                SHOOTER_PORT = 54,
+                SPEED_UP_BUTTON = 4, //Y button
+                SPEED_DOWN_BUTTON = 1; //A button
 
-        // TODO: clean this up when import config from baserobotcode
-        public RevSRSConfig hoodServoConfig = new RevSRSConfig(
-            HOOD_SERVO_PORT,
-            1,
-            new PIDConfig(HOOD_SERVO_P, HOOD_SERVO_I, HOOD_SERVO_D, HOOD_SERVO_IZONE)
-        );
+            public boolean SHOOTER_INVERTED = true;
 
-        public RevSRSConfig panServoConfig = new RevSRSConfig(
-            PAN_SERVO_PORT,
-            1,
-            new PIDConfig(PAN_SERVO_P, PAN_SERVO_I, PAN_SERVO_D, PAN_SERVO_IZONE)
-        );
-                                                                                    
+            public double 
+                RPM_INCREMENT = 100, 
+                P = 1, 
+                I = .001, 
+                D = 0, 
+                iZone = 500;
+
+            public SparkMaxWithEncoderConfig MOTOR_CONFIG = new SparkMaxWithEncoderConfig(
+                new SparkMaxConfig(SHOOTER_PORT, SHOOTER_INVERTED),
+                new BaseEncoderConfig(0, false),
+                new PIDConfig(P, I, D, iZone)
+            );
+        }
+
+        public class Hood {
+            public int
+                CHANNEL = 9,
+                CLOCKWISE_BUTTON = 6, //Right shoulder button
+                COUNTERCLOCKWISE_BUTTON = 5; //Left shoulder button
+            
+            private double
+                SPEED_CAP = 1,
+                P = 1,
+                I = 2.5,
+                D = 0,
+                IZONE = 0;
+
+            public RevSRSConfig RevSRSConfig = new RevSRSConfig(
+                CHANNEL,
+                SPEED_CAP,
+                new PIDConfig(P, I, D, IZONE));
+        }
+
+        public class Pan {
+            public int
+                CHANNEL,
+                CLOCKWISE_BUTTON,
+                COUNTERCLOCKWISE_BUTTON;
+
+            private double
+                SPEED_CAP = 1,
+                P = 1,
+                I = 2.5,
+                D = 0,
+                IZONE = 0;
+
+            public RevSRSConfig RevSRSConfig = new RevSRSConfig(
+                CHANNEL,
+                SPEED_CAP,
+                new PIDConfig(P, I, D, IZONE)
+            );
+        }
+
+        public class Belt {
+            
+        }
     }
+
 
     // Constatnts from RunConstants
     public class RunConstants {  
@@ -125,7 +144,8 @@ public class Config {
             RUNNING_INTAKE, 
             RUNNING_GYRO,
             RUNNING_LIFT,
-            RUNNING_SHOOTER;
+            RUNNING_SHOOTER,
+            RUNNING_SERVO;
     }
 
     // Constants from DriveConstants
@@ -142,7 +162,7 @@ public class Config {
 
         public double 
             MAX_ANGULAR_VELOCITY = 1.0, 
-            MAX_LINEAR_VELOCITY = .5;
+            MAX_LINEAR_VELOCITY = 0.5;
 
         public int
             PID_INDEX = 0, 
@@ -179,9 +199,5 @@ public class Config {
 			ANGULAR_SPEED_MULT = 1.0,
 			NUDGE_MOVE_SPEED = 0.2,
 			NUDGE_TURN_SPEED = 0.2;
-    }
-
-    public class LimeLightConstants {
-        // TBD
     }
 }

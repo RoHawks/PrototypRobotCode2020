@@ -140,8 +140,8 @@ public class Robot extends TimedRobot {
 		}
 
 		if (mConfig.runConstants.RUNNING_LIFT) {
-			liftMotor = new TalonSRX(mConfig.liftConstants.MOTOR_CONFIG);
-			liftOutput = mConfig.liftConstants.LIFT_POWER_OUTPUT;
+			liftMotor = new TalonSRX(mConfig.LIFTER.MOTOR_CONFIG);
+			liftOutput = mConfig.LIFTER.LIFT_POWER_OUTPUT;
 		}
 
 		if (mConfig.runConstants.RUNNING_SHOOTER) {
@@ -159,9 +159,9 @@ public class Robot extends TimedRobot {
 
 			beltMotor = new com.ctre.phoenix.motorcontrol.can.TalonSRX(31);
 			sideRoller = new com.ctre.phoenix.motorcontrol.can.TalonSRX(37);
-			shooterRPM = mConfig.shooterConstants.SHOOTER_RPM;
-			panServo = new RevSRS(mConfig.shooterConstants.panServoConfig);
-			hoodServo = new RevSRS(mConfig.shooterConstants.hoodServoConfig);
+			shooterRPM = 0; // todo: abstract
+			panServo = new RevSRS(mConfig.SHOOTER.PAN.RevSRSConfig);
+			hoodServo = new RevSRS(mConfig.SHOOTER.HOOD.RevSRSConfig);
 		}
 
 		if (mConfig.runConstants.RUNNING_CAMERA) {
@@ -334,15 +334,15 @@ public class Robot extends TimedRobot {
 
 	private void runLift() {
 		//check secondary for speed change
-		if (mJoystick.getRawButtonReleased(mConfig.liftConstants.SPEED_UP_BUTTON)) {
-			liftOutput += mConfig.liftConstants.SPEED_INCREMENT;
-		} else if (mJoystick.getRawButtonReleased(mConfig.liftConstants.SPEED_DOWN_BUTTON)) {
-			liftOutput -= mConfig.liftConstants.SPEED_INCREMENT;
+		if (mJoystick.getRawButtonReleased(mConfig.LIFTER.SPEED_UP_BUTTON)) {
+			liftOutput += mConfig.LIFTER.SPEED_INCREMENT;
+		} else if (mJoystick.getRawButtonReleased(mConfig.LIFTER.SPEED_DOWN_BUTTON)) {
+			liftOutput -= mConfig.LIFTER.SPEED_INCREMENT;
 		}
 
-		if (mJoystick.getRawButton(mConfig.liftConstants.DRIVE_BUTTON)) {
+		if (mJoystick.getRawButton(mConfig.LIFTER.DRIVE_BUTTON)) {
 			liftMotor.setOutput(liftOutput);
-		} else if (mJoystick.getRawButton(mConfig.liftConstants.REVERSE_BUTTON)) {
+		} else if (mJoystick.getRawButton(mConfig.LIFTER.REVERSE_BUTTON)) {
 			liftMotor.setOutput(-liftOutput);
 
 		} else {

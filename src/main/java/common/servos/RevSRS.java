@@ -35,13 +35,15 @@ public class RevSRS extends Servo {
         mode = Mode.Continuous; //If we need a angular mode, then we add another argument to constructor
         speedCap = config.getSpeedCap();
         PIDConfig pidConfig = config.getPIDConfig();
-
-        pid = new PIDController(
-            pidConfig.getP(),
-            pidConfig.getI(),
-            pidConfig.getD(), 
-            pidConfig.getIZone()
-        );
+        
+        if (pidConfig != null) {
+            pid = new PIDController(
+                pidConfig.getP(),
+                pidConfig.getI(),
+                pidConfig.getD(), 
+                pidConfig.getIZone()
+            );
+        }
     }
 
     public void setPIDSpeed(double target) {
@@ -74,5 +76,9 @@ public class RevSRS extends Servo {
 
     public double getTargetOutput() {
         return targetOutput;
+    }
+
+    public PIDController getPID() {
+        return pid;
     }
 }

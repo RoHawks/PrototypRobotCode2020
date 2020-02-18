@@ -38,6 +38,9 @@ public class ShooterAimer {
         this.panServoInverted = panServoInverted;
         this.hoodServoInverted = hoodServoInverted;
         hoodServo = new RevSRS(hoodServoConfig);
+        hoodServo = new RevSRS(hoodServoConfig);
+        panServoPID = panServo.getPID();
+        hoodServoPID = hoodServo.getPID();
     }
 
     public void aimAuto() {

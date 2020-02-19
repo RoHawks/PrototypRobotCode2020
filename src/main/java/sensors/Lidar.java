@@ -40,10 +40,22 @@ public class Lidar {
             return 0;
         } 
         cm = (counter.getPeriod() * 1000000.0/10.0) + CALIBRATION_OFFSET;
+        return cm * CM_TO_IN;
+    }
+
+    public double getAverageDistance() {
+        double cm;
+        if ( counter.get() < 1) {
+            if (printedWarningCount-- > 0) {
+                System.out.println("LidarLite waiting for distance measurement");
+            }
+            return 0;
+        } 
+        cm = (counter.getPeriod() * 1000000.0/10.0) + CALIBRATION_OFFSET;
         total += cm;
         historicalMeasurements.add(cm);
         total -= historicalMeasurements.remove();
         
-        return total * CM_TO_IN;
+        return (total / 20.0) * CM_TO_IN;
     }
 }
